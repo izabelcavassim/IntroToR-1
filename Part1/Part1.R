@@ -321,13 +321,16 @@ MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/ti
 # to only one class of data.
 
 # R recognizes several classes of data that can be 'packaged' into vectors. 
-# Characters are strings of alphanumeric charaters that have quotation marks 
-# around them. Integers and Numerics, which are different classifications 
+# 1. **Characters** are strings of alphanumeric charaters that have quotation marks 
+# around them. 
+# 2. **Integers and Numerics**, which are different classifications 
 # of numbers, Integers represent whole numbers and Numerics also include
-# decimals and numbers in scientific notation. Logicals are TRUE / FALSE 
+# decimals and numbers in scientific notation. 
+# 3. **Logicals** are TRUE / FALSE 
 # designations which are very useful for creating loops and for filtering
-# or selecting data. When importing data R, also occasionally categorizes 
-# vectors as Factors which can be a mixture of the classes listed above.
+# or selecting data. 
+# 4. When importing data R, also occasionally categorizes 
+# vectors as **Factors** which can be a mixture of the classes listed above.
 
 # There are a lot of ways view aspects of your data set. Depending on the 
 # number of columns, or rows that you have, you might want to use one
@@ -335,7 +338,6 @@ MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/ti
 # head(dataframe) command to see the first several lines of a data set
 # or use tail(dataframe) to see the last several lines the data set. 
 # Try it out with the data sets that we imported.
-
 
 
 
