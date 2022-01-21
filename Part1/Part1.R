@@ -409,7 +409,7 @@ rownames(CountyPop)
 # Spread: sd(), IQR()
 # Range: min(), max(), quantile()
 # Position: first(), last(), nth(), which()
-# Count: n(), n_distint() 
+# Count: n(), n_distinct() 
 # Summarize: summarize(), str()
 
 
