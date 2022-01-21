@@ -104,6 +104,11 @@
 # lubridate
 
 install.packages('tidyr') 
+install.packages('dplyr') 
+install.packages('tibble') 
+install.packages('RColorBrewer') 
+install.packages('ggplot2') 
+install.packages('lubridate') 
 
 # In order to run code from an Rsource file, go to the line or highlight
 # the code that you want to run and hit Command/Control + Return. This 
@@ -111,10 +116,10 @@ install.packages('tidyr')
 # the packages listed above. Notice if you get any warning or error messages. 
 
 # Packages are bits of code that are built in order to perform specific tasks
-# in R. For example: the tidyr, dplyr and tibblle packages are built organize 
+# in R. For example: the tidyr, dplyr and tibble packages are built organize 
 # and clean data that you are working with. The packages ggplot2 and RColorBrewer 
 # are used for data visualization and color blending. The lubridate package is
-# used for working with dates and times when plotting. Eeach of these will 
+# used for working with dates and times when plotting. Each of these will 
 # will come in handy by the end of the workshop.
 
 # Once packages are installed you can see them listed under the 'Packages' 
@@ -123,13 +128,9 @@ install.packages('tidyr')
 # 'library()' command. See examples below.
 
 library('tidyr')
-library('RColorBrewer')
-library('ggplot2')
-library('dplyr')
-library('tibble')
-library('lubridate')
 
 # Use the library() command for all the packages you just installed. 
+# Are there other ways to load libraries in R?
 # Notice any errors or warnings.
 
 # =====================================================================
@@ -153,13 +154,13 @@ library('lubridate')
 # https://evoldyn.gitlab.io/evomics-2018/ref-sheets/R_data-import.pdf
 # data transformation: 
 # https://4.files.edl.io/b9e2/07/12/19/142839-a23788fb-1d3a-4665-9dc4-33bfd442c296.pdf
-# data visuualization with ggplot2: 
+# data visualization with ggplot2: 
 # https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
 
 # RStudio has created a bunch of these cheat sheets and they can all 
 # be accessed using RStudio Cloud or by searching RStudio cheat sheets. 
-# There is no need to look at these in detail during the workshop - the 
-# relevant commands will be provided through instruction. However, I highly
+# There is no need to look at these in detail during the workshop yet. 
+# Relevant commands will be provided through instruction. However, I highly
 # recommend reviewing these cheat sheets to see the breadth of capabilities
 # of RStudio's selected packages at some point.
 
@@ -169,7 +170,10 @@ library('lubridate')
 # forums pop up. Common forums include 'StackOverflow', 'R-bloggers' and for 
 # the life sciences 'Biostars'.
 
-# Before we begin, lets take a moment to do some jargon busting. 
+# Before we begin, lets take a moment to do some jargon busting. Are there
+# you have heard around data analysis or R that you would like to learn more
+# about? List them here and search the definitions. If new terms come up, 
+# write them down here to look up later.
 
 # =====================================================================
 # Day 1.4: Importing Data
@@ -186,7 +190,7 @@ library('lubridate')
 
 # To see what directory you are currently in type getwd().
 
-
+getwd()
 
 # The easiest way to set the directory is by navigating to the folder of 
 # interest in the 'Files' tab on the bottom right and then click on 'More' 
@@ -197,8 +201,6 @@ library('lubridate')
 # other file path you want. The "~" points to your current directory. When 
 # in doubt, type the full file path instead of "~".
 
-
-
 # To see the contents of the working directory type dir()
 
 
@@ -208,20 +210,20 @@ library('lubridate')
 # ---------------------------------------------------------------------
 
 # In order to work with data in R it needs to be imported from an outside 
-# source. There are some data sets bulit into R, but In a typical resaerch 
+# source. There are some data sets bulit into R, but In a typical research 
 # workflow this will come from a dataset that you create, or one that you 
 # find in a publicly available database. 
 
-# For this particular lesson we will pick apart some health related data. 
-# In this case we will import a few different data sets. The first is a
-# table of state population information that I made in Excel and I saved 
-# as a CSV. The second is a data set that was deposited in Kaggle of COVID
-# data that was collected by the COVD19 data project and used by the New
-# York Times. I've downloaded the data set so that we can import it.
-# The third data set is sourced from the Tidy Tuesday community looking
-# at measles vaccination rate at schools across the country. We are going
-# to use these data sets to learn about the functionality of R, and ask
-# some basic public health questions throughout this lesson. 
+# For this particular lesson we will pick apart some public health related 
+# data. In this case we will import a few different data sets. The first is a
+# table of CA county population information that I made in Excel and I saved 
+# as a CSV. The second is a data set is from the Calfornia Department of
+# Public Health (CDPH) COVD19 vaccination data collection project I've 
+# downloaded the data set so that we can import it. The third data 
+# set is sourced from the Tidy Tuesday community looking at measles 
+# vaccination rate at schools across the country. We are going to use 
+# these data sets to learn about the functionality of R, and ask some 
+# basic public health questions throughout this lesson. 
 
 # --------------------------------------------------------------------- 
 # Import data from a local directory
@@ -230,19 +232,21 @@ library('lubridate')
 # For this lesson our goal is to work with some of our imported data to
 # create some visualizations for the information that we are working with. 
 # We will import some public COVID19 data along with some information about 
-# state populations. We will use some data manipulation, cleaning and 
-# visualization tools in order to plot the number of cases of COVID19 
-# recorded per million people for every US state and major territories. 
+# CA county populations. We will use some data manipulation, cleaning and 
+# visualization tools in order to plot the number of COVID19 vaccinations   
+# administered per 10,000 residents for every CA county listed. We will refer
+# to this metric as 'vaccination density'.
 
-# Move into the 'Data' folder within this directory. 
+# Move into the 'Data' folder within this directory. Below is an example of 
+# what the code would look like (this code wont work).
 
-setwd("~/Path/To/Working/Directory/200623-IntroToR/Day1/Data")
+setwd("~/Path/To/Working/Directory/210126-IntroToR/Day1/Data") 
 
 # Now we're going to load our first data set into R. The base R 
 # command for reading a table is the read.table() command. We can read 
 # the table into an object using the assignment "<-" operator. 
 
-StatePop <- read.table("States.csv", header = TRUE, sep = ",")
+CountyPop <- read.table("CountyData", header = TRUE, sep = ",")
 
 # The read.csv() and read.csv2() commands can also be used for importing 
 # this data. Look at the documentation for read.table(). Notice the syntax,
@@ -256,7 +260,7 @@ StatePop <- read.table("States.csv", header = TRUE, sep = ",")
 # global environment or type View(dataframe) to see it. 
 
 
-View(StatePop)
+View(CountyPop)
 
 
 # There are a lot of strategies that can be used to assign variable/object
@@ -271,13 +275,13 @@ View(StatePop)
 # but-not-like-this (the dash is also used for subtraction)
 # 4nor_likeThis (numbers are okay to use, but only at the end)
 
-# Lets load in our other data sets. In this case, we have the NYT COVID data
-# set. We can see in our working directory that there is a csv file called
+# Lets load in our other data sets. In this case, we have the California
+# department of public health COVID vaccination totals data set. If we run
+# We can see in our working directory that there is a csv file called
 # "us_states_covid19_daily.csv". Use the read.csv command and the assignment
 # operator <- to assign it to a variable.
 
-CovidData <- read.csv("us_states_covid19_daily.csv", header = TRUE, sep = ",")
-
+CountyVaxDataCA <- read.csv("cdph-vaccination-county-totals.csv", header = XXXX, sep = "?")
 
 
 # --------------------------------------------------------------------- 
@@ -288,50 +292,66 @@ CovidData <- read.csv("us_states_covid19_daily.csv", header = TRUE, sep = ",")
 # path for an online directory. In this case we will be using a dataset
 # from a dataset collected by the TidyTuesday community. If you are looking
 # to get some extra practice in R after this, I recommend checking out their
-# data sets, or attending a TidyTuesday event. For more info check out:
+# data sets, or participating in a TidyTuesday event. For more info check out:
 # https://github.com/rfordatascience/tidytuesday
 
 # Lets load in the measles vaccination dataset You can find more info about
 # the data set by following this url:
 # https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-02-25/readme.md
 
-# The data set itself can be loaded like a CSV file using the read.csv command by 
-# replacing the file-type with the following URL: 
+# The data set itself can be loaded like a CSV file using the read.csv command 
+# by replacing the file-type with the following URL: 
 # https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv
 
 # Give it a try. 
 
-MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv', header = TRUE, sep = ",")
+MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-25/measles.csv', header = XXXX, sep = "?")
 
 
 # --------------------------------------------------------------------- 
-# Understanding your data set
+# Data Structures, Types and Summaries
 # ---------------------------------------------------------------------
 
-# There are a lot of ways to see your data set, and depending on the 
+# R works most efficiently with data in the form of vectors, which you 
+# can think of as lists of info that fall under a particular class. When
+# multiple vectors of the same length are joined up together they create
+# a data frame, which might look similar to a table you would see in excel.
+# A data frame can have multiple classes of data, in contrast, a data matrix
+# can also like a data frame, with the exception that matricies are limited 
+# to only one class of data.
+
+# R recognizes several classes of data that can be 'packaged' into vectors. 
+# Characters are strings of alphanumeric charaters that have quotation marks 
+# around them. Integers and Numerics, which are different classifications 
+# of numbers, Integers represent whole numbers and Numerics also include
+# decimals and numbers in scientific notation. Logicals are TRUE / FALSE 
+# designations which are very useful for creating loops and for filtering
+# or selecting data. When importing data R, also occasionally categorizes 
+# vectors as Factors which can be a mixture of the classes listed above.
+
+# There are a lot of ways view aspects of your data set. Depending on the 
 # number of columns, or rows that you have, you might want to use one
-# or more strategies. You can use head(dataframe) to see the top of 
-# a long data set, use tail(dataframe) to see the bottom of the data set. 
-# Try it out.
+# or more strategies. The quickest way to view a data set is to use the
+# head(dataframe) command to see the first several lines of a data set
+# or use tail(dataframe) to see the last several lines the data set. 
+# Try it out with the data sets that we imported.
 
 
 
-# You can also look at the 'class' of the data. This is very important 
-# because different commands are often designed to work with specific 
-# classes of data. In this case the class of data we are working with so
-# far is dataframes. Use the class() command on the objects stored in our
-# global environment and you can see. 
 
-class(StatePop)
-class(MMRVaccineRate)
-class(CovidData)
 
-# When performing computation and manipulation of data, R recognizes several
-# classes of data. Characters are strings of alphanumeric charaters and when 
-# read by R are, need to have "quotations" around them. There are also integers
-# and numerics, which are different classifications of numbers. The last we will 
-# discus are logicals which are TRUE / FALSE designations, which are very useful 
-# for filtering or selecting data. 
+# You can also look at the 'class' of the data sets and their various
+# components. This is very important because certain commands are often 
+# designed to work with specific classes of data. Looking up the class
+# of data that you are working with can give a clue when it comes time
+# to troubleshoot. In this case the class of data we are working with 
+# so far is dataframes. Use the class() command on the objects stored in 
+# our global environment and you can see. You can also use the str()
+# command to look at the class of variables within a data frame
+
+class(CountyVaxDataCA)
+
+str(XXXXXXXX)
 
 # The classification is important because some operations can only function 
 # when the classifications match, or are of a particular type. You can change
@@ -342,12 +362,26 @@ class(CovidData)
 # as.numeric() - interprets object as decimal number class
 # as.logical() - interprets object as logical (TRUE/FALSE) value
 
-# You can examine the class of specific columns in the data by using the 
-# dataframe$column syntax. Try using the auto-complete feature here.
+class(CountyPop$County)
 
-class(StatePop$State)
-class(MMRVaccineRate$city)
-class(CovidData$positive)
+# Fill in the XXXX with a column in the data sets we imported. Try using
+# the auto-complete feature here.
+
+class(MMRVaccineRate$XXXXXXX)
+
+class(CountyVaxDataCA$XXXXXX)
+
+# Notice that some of these variables are listed as factors. This won't
+# be a problem for us now, but let's practice changing these some of these
+# factors in to characters. Using the examples below change the class.
+
+#Convert into a character, or another class and see what happens
+CountyPop$County <- as.XXXXXXXX(CountyPop$County)
+
+#Check the class of the CountyPop$County data to check to see if it worked
+XXXXXX(CountyPop$County)
+
+
 
 # Check the class of some other columns and type them in here.
 
@@ -361,15 +395,17 @@ class(CovidData$positive)
 # You can use specific commands to take a look at the different column and 
 # rownames within various data sets. 
 
-colnames(MMRVaccineRate)
-rownames(SelectedPops)
+colnames(CountyVaxDataCA)
+rownames(CountyPop)
 
-# Protip: You can think of the different variables within a data frame as
-# 'vectors' which is essentially a list of any of the object classes described
-# above. R works very efficiently with vectors in order to perform its functions
-# of both character and numeric manipulaltions. Be sure to check the class of data
-# that you are working with is compatibile with the class of data commands ask 
-# for. This is another common source for errors. 
+# Protip: there are a wide variety of built in functions for summarizing data
+# below, I list a few of the more useful commands. Look them up in the 
+# Center: mean(), median()
+# Spread: sd(), IQR()
+# Range: min(), max(), quantile()
+# Position: first(), last(), nth(), which()
+# Count: n(), n_distint() 
+# Summarize: summarize(), str()
 
 
 # ---------------------------------------------------------------------
@@ -378,15 +414,17 @@ rownames(SelectedPops)
 
 # The easiest way to start working with and clean data frames is with the 
 # dplyr and tidyr packages. These packages offers a wide variety commands to 
-# filter and clean data frames in order to make data sets more manageable to work
-# with and visualize. We loaded them earlier so we can get started using them.
+# filter and clean data frames in order to make data sets more manageable to
+# work with and visualize. We loaded them earlier so we can get started using
+# them.
 
 # We can use the select() command to select specific columns from any table.
 
-StatePop <- select(StatePop, State, StateAbbreviation, Pop.millions)
+CountyPopFilter <- select(CountyPop, County, Per10K)
 
-# Notice that in the Global Environment, SelectedPops only has 3 variables 
-# instead of 25. Those are the columns that we picked. 
+# Notice that in the Global Environment, CountyPopFilter only has 2 variables 
+# instead of 4. We removed the 'Rank' variable and the non-normalized
+# 'Population' variable. 
 
 # We can use the filter() command to pick on specific rows characteristics.
 
@@ -399,6 +437,7 @@ VaccineCA <- filter(MMRVaccineRate, state == "California")
 # data needs to be shaped in different ways for different data visualization 
 # packages.
 
+
 # Removing items from your Global Environment. If you are working with a 
 # lot of different objects in the global environment it may be helpful to 
 # periodically view or clear it out. To list everything your global 
@@ -410,30 +449,34 @@ VaccineCA <- filter(MMRVaccineRate, state == "California")
 # Test what you learned
 # ---------------------------------------------------------------------
 
-# For our example research question we want to find a way to visualize the 
-# number of cases-per-million of COVID19 for every state in the US. We need to 
-# import some COVID19 data for analysis. 
+# For our example research question, we want to find a way to visualize the 
+# number of vaccinations density of COVID19 for every state in the US. We 
+# need to import some COVID19 vaccination data for analysis. 
 
-# How many observations and variables are there in the full 'CovidData' data set? 
+# How many observations and variables are there in the full 'CountyVaxDataCA'
+# data set? Write your answer in the space below:
 
 
 
 
-# What variables do you see in the Covid Data table? Use colnames() to call up 
-# the list of all the column names.
-
+# What variables do you see in the COVID Vaccination Data table? Use colnames()
+# to list of all the column names. What do each of these column names mean?
+# Hint: Information about datasets is generally called metadata. Most data 
+# repositories require metadata for their submissions. In this case you You can
+# look up the metadata at the source listed below: 
+# https://github.com/datadesk/california-coronavirus-data
 
 
 
 # Our next step will be to merge two tables together take a look at the states
-# table and the CovidData table. To do that, we will need to designate a column
-# with common values. Which two columns are the same between the two data frames?
+# table and the CovidData table. To do that, we will need to tell R where the data
+# sets align. Which two columns are the same between the two data frames?
 
 
 
-# In your own practice you will most likely have to create vectors and dataframes
+# In your own practice you will most likely have to create dataframes
 # and rename columns to make your work easier. Keep in mind that when you name
-# columns or vectors make sure that there is enough information for the name 
+# columns make sure that there is enough information for the name 
 # to be useful. If you have to share or troubleshoot your work someone else 
 # might have to look through the code and make sense of it. Same thing with 
 # loading data sets, knowing what the variables mean within data sets can help 
@@ -441,15 +484,19 @@ VaccineCA <- filter(MMRVaccineRate, state == "California")
 # context of the research ultimately helps determine how the data can be 
 # interpreted. Failing to understand the full context of the data you are 
 # using for an analysis can lead to very significant real-world consequences 
-# (see book recommendations below)
+# (see reading recommendations below)
 
 
 # ---------------------------------------------------------------------
 # Recommended Reading
 # ---------------------------------------------------------------------
 
+# Dissecting racial bias in algorithm used to manage health of populations
+# by Obermeyer et al. 2019 https://doi.org/10.1126/science.aax2342
 # Weapons of Math Destruction by Cathy O' Neil
 # Algorithms of Oppression by Safiya Noble
+# Counting by Deborah Stone
+
 
 # Also take a look at the data transformation with dplyr cheat sheet:
 # https://4.files.edl.io/b9e2/07/12/19/142839-a23788fb-1d3a-4665-9dc4-33bfd442c296.pdf
@@ -470,31 +517,31 @@ VaccineCA <- filter(MMRVaccineRate, state == "California")
 # forms that are more readily useful for visualization. This could be taking 
 # raw data and performing some form of quantification or computation. 
 # This could be merging data sets, pivoting data sets, selecting or 
-# subsetting data, mutating data to create new columns, and summarizing 
+# subsetting data, performing calculations to make new columns, and summarizing 
 # data in some way. In this section we will explore some common and 
 # powerful data wrangling tools. For more information on different 
 # operations that can be used check out the RStudio data transformation 
 # cheat sheets using dplyr() and tidyr(). 
 
-CovidData <- read.csv("us_states_covid19_daily.csv", header = TRUE, sep = ",")
+CountyVaxDataCA <- read.csv("cdph-vaccination-county-totals.csv", header = TRUE, sep = ",")
 
-StatePop <- read.table("States.csv", header = TRUE, sep = ",")
-StatePop <- select(StatePop, State, StateAbbreviation, Pop.millions)
+CountyPop <- read.table("CountyData.csv", header = TRUE, sep = ",")
+CountyPopFilter <- select(CountyPop, County, Population, Per10K)
 
 # ---------------------------------------------------------------------
 # Merging Tables
 # ---------------------------------------------------------------------
 
 # In order to carry forward with our analysis, we need to reorganize 
-# the data in a way that aligns the state population information with 
-# the number of positive cases. In order for R to merge tables - they 
+# the data in a way that aligns the county population information with 
+# the number of vaccine doses. In order for R to merge tables - they 
 # need to have some level of overlapping information so that it knows 
 # how to align the tables. In this case we are going to match columns
 # based on the state information. We can use the dplyr full_join() 
 # command in order to bring the tables together and use the "by =" to 
 # tell it what columns should be treated as equivalent.
 
-CovidStateData <- left_join(StatePop, CovidData, by = c("StateAbbreviation"="state"))
+VaxDataMerged <- left_join(CountyPopFilter, CountyVaxDataCA, by = c("County"="county"))
 
 # Notice how the tables merge together. Did it work? How did this operation 
 # merge the tables? 
@@ -525,16 +572,20 @@ NewDataFrame <- OldDataFrame %>%
   Mutate(col4 = col2 * 2) %>% # create a new col4 by multiplying col2 * 2
   Filter(col1 != "NA") # remove all rows containing NA values in col1
 
-# For our example, we want to calculate the number of COVID cases per million
-# (CPM) residents for every state in the US. When we merged the table above, 
-# the state population information (in millions) aligned with the number of 
-# positive COVID19 cases. 
+# For our example, we want to calculate the number of COVID vaccinations depending
+# on the population density for every county. When we merged the table above, 
+# the county population information (per10k residents) aligned with the number 
+# of COVID19 vaccinations.  
 
-CasesPerMillion <- CovidStateData %>%
-  mutate(CPM = positive/Pop.millions) %>% 
-  filter(Pop.millions != "NA")
+NormalizedVaxData <- VaxDataMerged %>%
+  mutate(VaxDensity = fully_vaccinated/Per10K) %>% 
+  filter(VaxDensity > 10)
 
-# NA's were introduced in rows where the state population data was unavailable. 
+# When performing calculations NA's can be introduced where calculations fail. 
+# It is a good practice to check your data every time you do a caluclation
+# to be sure everything works as expected. NA's sometimes trip up some commands
+# in R so it is useful to know how to remove NA values from your table. 
+
 # We can remove rows containing NA using the filter command. In this particular 
 # command we use a 'relational operator'. != translates to 'is not equal to' 
 # when used in the filter command. What are some other relational operators 
@@ -544,11 +595,20 @@ CasesPerMillion <- CovidStateData %>%
 
 
 # What if we wanted to our plot to only show data from states once they reach 
-# a threshold of 1 CPM. How would we rewrite the filter command to remove all
-# CPM values below 1?
+# a threshold of 50 Cases per 10,000 residents. How would we rewrite the filter
+# command to remove all VaxDensity values below 50?
 
 
 
+# Lets break down a more sophisticated example where we simultaneously group by
+# specific features, and summarize data. 
+LastMonthSummarized <- CountyVaxDataCA %>%
+  filter(date > ymd("2021-09-19")) %>%
+  group_by(county) %>%
+  summarize(MeanNewDoses = mean(new_doses_administered), 
+            NewPfizerDoses = mean(new_pfizer_doses), 
+            NewModernaDoses = mean(new_moderna_doses), 
+            NewJJDoses = mean(new_jj_doses))
 
 
 # =====================================================================
@@ -568,22 +628,26 @@ CasesPerMillion <- CovidStateData %>%
 # customizable features for each geometry making ggplot2 one of the most 
 # comprehensive packages for data visualization in R. 
 
-# First lets pull some data from an earlier step. Lets pick a state, and 
-# plot a line graph using ggplot2 that shows the total number of positive 
-# cases beginning on the first day of recorded COVID19 infections for 
-# that state. 
+# First lets pull some data from an earlier step. Lets filter on counties
+# with more than one million residents, and plot a line graph using ggplot2 
+# that shows the total number of positive cases beginning on the first day 
+# of recorded COVID19 vaccinations for those counties. 
 
-InfectionGrowth <- CasesPerMillion %>%
-  select(date, State = StateAbbreviation, CPM, positive, Pop.millions) 
+# ---------------------------------------------------------------------
+# Creating a simple line plot with ggplot2
+# ---------------------------------------------------------------------
 
-InfectionGrowth <- InfectionGrowth %>%
-  filter(Pop.millions >= 10) 
+VaccinationRate <- NormalizedVaxData %>%
+  select(date, County, VaxDensity, fully_vaccinated, Per10K, at_least_one_dose, new_doses_administered) 
 
-plot <- ggplot(InfectionGrowth, aes(x = ymd(date), y = positive, color = State)) + 
+VaccinationRate <- VaccinationRate %>%
+  filter(Per10K >= 100)
+
+plot <- ggplot(VaccinationRate, aes(x = ymd(date), y = fully_vaccinated, color = County)) + 
   geom_smooth(method = "auto") + 
   labs(x = "Date", 
-       y = "Number of Positive Cases", 
-       title = "Covid Cases in Large States")
+       y = "Fully Vaccinated (Total)", 
+       title = "Vaccinations in Large Counties")
 
 plot
 
@@ -609,55 +673,86 @@ plot
 ExamplePlot <- ggplot(DataFrame, aes(X, Y)) + 
   geom_smooth() # this geom creates a linear model
 
-
-# Now try to create an identical plot looking at cases per million for the large
+# Now try to create an identical plot looking at case density for the large
 # instead of total cases. I've copied over the syntax of the code, now fill in 
-# the variables where we see XXX to get the code to work.
+# the variables where we see XXXX to get the code to work.
 
-CpmPlot <- ggplot(InfectionGrowth, aes(ymd(XXXX), XXX, color = XXXXX)) +
-  geom_smooth(method = "auto")
+VaxDensityPlot <- ggplot(VaccinationRate, aes(ymd(XXXX), VaxDensity, color = County)) +
+  geom_smooth(XXXXXX = "auto")+ 
+  labs(x = "Date", 
+       y = "Full Vaccinations per 10k Residents", 
+       title = "Vaccination Density in Large Counties")
 
-CpmPlot
+VaxDensityPlot
 
-# This plot is a bit overwhelming - we can separate out the different states
+# This plot is a bit hard to read - we can separate out the different counties
 # by using the facet_wrap command. I've copied over the syntax of the code, fill
-# in the variables where we see XXX to get the code to work.
+# in the variables where we see XXXX to get the code to work.
 
-CpmPlotFacets <- ggplot(InfectionGrowth, aes(ymd(XXXX), XXX, color = XXXXX)) +
+VaxDensityPlotFacets <- ggplot(VaccinationRate, aes(ymd(date), XXXXXXXXXX, color = XXXXXXX)) +
   geom_smooth(method = "auto") + 
-  facet_wrap(facets = "State")
+  facet_wrap(facets = "County")
 
-CpmPlotFacets
+VaxDensityPlotFacets
 
-# It is pretty difficult to see differences in CPM growth trajectory since the states
-# look so similar. Lets try to see if the number of cases per million are different
-# when we compare the large states last month of data. In this case lets filter 
-# the data based on date and create a violin plot to view the data. The last day of 
-# recorded data in this COVID data set is on Sep 27th. Use the filter command to filter
-# and geom_violin added to ggplot.
+# ---------------------------------------------------------------------
+# Creating Violin plots with ggplot2
+# ---------------------------------------------------------------------
 
-LastMonthInfections <- InfectionGrowth %>%
-  filter(date >= YYYYMMDD)
+# Having the data all divided up gives us a nice picture for all the
+# different vaccination trajectories. Lets try to look at a small window
+# (just the last month) of new confirmed cases. The example below shows
+# how to filter dates. In this example
 
-CpmViolin <- ggplot(LastMonthInfections, aes(XXXXX, XXX, fill = XXXXX)) +
-  geom_violin(scale = "area")+
-  scale_fill_brewer(palette = "Blues")
+LastMonthVaccinations <- VaccinationRate %>%
+  filter(ymd(date) >= ymd("2021-09-19"))
 
-CpmViolin
+# What is happening in this filter step? Try running the script without 
+# the ymd() command.
 
 
+
+
+# Below is some example code for creating a Violin Plot, Take a moment to look
+# at the geom_violin() documentation and look at the different argument options.
+
+
+VaxViolin <- ggplot(LastMonthVaccinations, aes(County, new_doses_administered, fill = County)) +
+  geom_violin(scale = "width")+
+  geom_dotplot(binaxis = "y", dotsize = 0.5, stackdir = "center", fill = "black") +
+  scale_fill_brewer(palette = "Blues")+ 
+  labs(title = "Doses Administered In Large Counties",
+       y = "New Doses Administered")
+
+VAxViolin
+
+# The axis looks a bit ugly with the overlapping text in the x axis. Let's
+# remove those labels to create a cleaner plot. Fill in the XXXX to get the
+# code to work
+
+VaxViolin2 <- ggplot(LastMonthVaccinations, aes(County, XXXXXXXXX, fill = XXXXXX)) +
+  geom_violin(scale = "XXXXX")+
+  scale_fill_brewer(palette = "Blues")+ 
+  theme(axis.text.x=element_blank())+
+  labs(title = "Doses Administered In Large Counties",
+       y = "New Doses Administered")
+
+VaxViolin2
 
 # We rarely create plots without looking at mean and standard deviation
 # measurements. There are several ways to do that, but one way to do this
-# is with the stat_summary function added to ggplot.
+# is with the stat_summary function added to ggplot. Fill in the XXXX to 
+# get the code to work.
 
-CpmViolin2 <- ggplot(LastMonthInfections, aes(XXXXX, XXX, fill = XXXXX)) +
-  geom_violin(scale = "XXXX")+
+VaxViolin3 <- ggplot(LastMonthVaccinations, aes(XXXXXX, XXXXXXXXXXXXX, fill = County)) +
+  geom_violin(scale = "width")+
   scale_fill_brewer(palette = "Blues")+
   stat_summary(fun.data = mean_sdl, fun.args = list(mult=1))+
-  labs(title="Cases Per Million (30 day average)")
+  labs(title="New Doses Administered", 
+       x = "County")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6))
 
-CpmViolin2
+VaxViolin3
 
 # The stat_summary function is one of several ways to add a mean and standard 
 # deviation line. For the arguments in the stat_summary you can find them
@@ -666,6 +761,10 @@ CpmViolin2
 # needed to plot the mean and standard deviation; "fun.args = list(mult=1)" 
 # relates to the standard deviation multiplier. In our plot we have a mean
 # plus/minus one standard deviation.
+
+
+# What is another way to add average and standard deviaiton information to a
+# ggplot?
 
 
 # ---------------------------------------------------------------------
@@ -697,34 +796,46 @@ CpmViolin2
 # Now the question is how do we know that the different states are 
 # significantly different? Using our data tables from before lets perform
 # some t-tests to see if we can see significant differences between the 
-# number of cases per million between two of the states we looked at 
-# in the violin plot. For example, let's compare Florida and California.
+# number of total new vaccinations doses given between two of the states 
+# we looked atin the violin plot. For example, let's compare San Diego and
+# Los Angeles.
 
 # Using the filter command create a data frame with the last month of
-# positive cases per million totals for CA and FL.
+# vaccination doses administered per million for SD and LA.
 
-CAcases <- LastMonthInfections %>%
-  filter(State == "CA")
+LAvax <- LastMonthVaccinations %>%
+  filter(County == "Los Angeles")
 
-FLcases <- LastMonthInfections %>%
-  filter(State =="FL")
+SDvax <- LastMonthVaccinations %>%
+  filter(County =="San Diego")
 
-# Use the t.test() function in order to compare the CPM columns like this:
+# Use the t.test() function in order to compare the VaxDensity columns like this:
 
-t.test(CAcases$CPM, FLcases$CPM)
+t.test(LAvax$VaxDensity, SDvax$VaxDensity)
 
 
-# Florida and California are qualitatively different. This we can actually see
-# on the plots that we created before. However, Ohio and Pennsylvania look
+# Los Angeles and San Diego are qualitatively different. This we can actually see
+# on the plots that we created before. However, San Diego and Orange county look
 # much more similar. Using the same approach, test to see if they are significantly
 # different. I've copied over the code for this. Fill in the XXXXX in order to 
 # get it to run
 
-OHcases <- LastMonthInfections %>%
-  XXXXXX(State == "CA")
+SDvax <- LastMonthVaccinations %>%
+  filter(County  == "San Diego")
 
-ILcases <- LastMonthInfections %>%
-  XXXXXX(State =="FL")
+OrangeVax <- LastMonthVaccinations %>%
+  filter(County  =="Orange")
+
+t.test(SDvax$VaxDensity, OrangeVax$VaxDensity)
+
+# R has a powerful suite of tools that can be used for statistical testing. 
+# T-testing is barely scratching the surface. Here are some other commands 
+# for common statistical tests:
+
+# Pairwise tests: oneway.test(), pairwise.t.test()
+# Testing distribution: aov_residuals()
+# Chi-Squared: kruskal.test(), chisq.test()
+# Linear Regression: lm()
 
 
 # ---------------------------------------------------------------------
