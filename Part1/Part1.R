@@ -202,7 +202,7 @@ getwd()
 # in doubt, type the full file path instead of "~".
 
 # To see the contents of the working directory type dir()
-
+# Type it down:
 
 
 # ---------------------------------------------------------------------
@@ -338,7 +338,7 @@ MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/ti
 # head(dataframe) command to see the first several lines of a data set
 # or use tail(dataframe) to see the last several lines the data set. 
 # Try it out with the data sets that we imported.
-
+# Type it down:
 
 
 
@@ -353,6 +353,8 @@ MMRVaccineRate <- read.csv('https://raw.githubusercontent.com/rfordatascience/ti
 
 class(CountyVaxDataCA)
 
+# You can find out the classes of all the data frame columns through 
+# the function str():
 str(XXXXXXXX)
 
 # The classification is important because some operations can only function 
@@ -401,7 +403,8 @@ colnames(CountyVaxDataCA)
 rownames(CountyPop)
 
 # Protip: there are a wide variety of built in functions for summarizing data
-# below, I list a few of the more useful commands. Look them up in the 
+# below, I list a few of the more useful commands. Look them up in the help section
+# by typing ?mean() for example, or using the "Find in Topic" box.
 # Center: mean(), median()
 # Spread: sd(), IQR()
 # Range: min(), max(), quantile()
